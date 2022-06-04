@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intake-api
+  labels:
+    app: intake-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: intake-api
+  template:
+    metadata:
+      labels:
+        app: intake-api
+    spec:
+      containers:
+        - name: intake-api
+          image: intake-api
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
