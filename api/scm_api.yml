@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scm-api
+  labels:
+    app: scm-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scm-api
+  template:
+    metadata:
+      labels:
+        app: scm-api
+    spec:
+      containers:
+        - name: scm-api
+          image: scm-api
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scm-api
+  labels:
+    service: scm-api
+spec:
+  selector:
+    app: scm-api
+  ports:
+  - port: 5000
+    targetPort: 5000

@@ -1,0 +1,11 @@
+env
+.dockerignore
+Dockerfile
+migrations
+*.yml
+*.png
+*.xml
+*.md
+*.pyc
+LICENSE
+__pycache__
