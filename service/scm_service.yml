@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scm-service
+  labels:
+    app: scm-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scm-service
+  template:
+    metadata:
+      labels:
+        app: scm-service
+    spec:
+      containers:
+        - name: scm-service
+          image: scm-service
+          imagePullPolicy: Never

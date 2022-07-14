@@ -26,10 +26,18 @@ class EventQueue:
         except Exception as e:
             print (f"Failed to disconnect from event queue : {e}")
 
-    def Post(self, event_data):
+    def publish(self, event_data):
         try:
             print(f"attempting to post {event_data}")
             self.channel.basic_publish(exchange='', routing_key=self.queue_name, body=event_data)
             print("posted data to event queue")
         except Exception as e:
             print (f"Failed to post data to event queue : {e}")
+
+    def subscribe(self, on_message):
+        try:
+            print("starting to subscribe to event queue")
+            self.channel.basic_consume(queue=self.queue_name, on_message_callback=on_message, auto_ack=True)
+            self.channel.start_consuming()
+        except Exception as e:
+            print (f"Failed to subscribe to event queue : {e}")

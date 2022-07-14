@@ -17,6 +17,9 @@ def run_cmd(cmd, dir = '', fail_on_error = True):
         else:
             print('!!!!above error ignored!!!!')
 
+def wait(seconds):
+    run_cmd(f"python -c \"__import__('time').sleep({seconds})\"")
+
 def set_dir(dir):
     if (not dir):
         dir = os.path.dirname(__file__)
