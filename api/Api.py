@@ -21,7 +21,7 @@ class Intake(Resource):
     def get(self):
         return make_response(jsonify({'Count': 0, 'comment':'work in progress will include more data' }), 200)
     def post(self):
-        event_queue.Post(request.get_json())
+        event_queue.Post(request.get_data())
         return make_response(jsonify({'Success': 'True'}), 201)
 
 api.add_resource(Health, '/')
