@@ -5,7 +5,7 @@ import os, sys
 # import file from sibling directory
 api_dir = os.path.dirname(os.path.realpath(__file__))
 app_dir = os.path.dirname(api_dir)
-queue_dir = os.path.join(app_dir, 'queue')
+queue_dir = os.path.join(app_dir, 'scm-queue')
 sys.path.append(queue_dir)
 from EventQueue import EventQueue
 
