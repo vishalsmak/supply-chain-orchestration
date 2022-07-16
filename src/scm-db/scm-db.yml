@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scm-db
+  labels:
+    app: scm-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scm-db
+  template:
+    metadata:
+      labels:
+        app: scm-db
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: scm-persistent-storage
+              mountPath: /data/db
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: smak
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: smak
+      volumes:
+        - name: scm-persistent-storage
+          persistentVolumeClaim: 
+            claimName: scm-storage-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scm-db
+spec:
+  selector:
+    app: scm-db
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
