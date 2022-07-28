@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scm-service
+  name: scm-intake-service
   labels:
-    app: scm-service
+    app: scm-intake-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: scm-service
+      app: scm-intake-service
   template:
     metadata:
       labels:
-        app: scm-service
+        app: scm-intake-service
     spec:
       containers:
-        - name: scm-service
-          image: scm-service
+        - name: scm-intake-service
+          image: scm-intake-service
           imagePullPolicy: Never

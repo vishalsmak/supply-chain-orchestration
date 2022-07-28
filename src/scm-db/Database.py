@@ -1,19 +1,41 @@
-import os, pymongo
+import os, pymongo, json
 
 class Database:
     db_service_name = 'SCM_DB_SERVICE'
     db_host_var_name = f'{db_service_name}_HOST'
     db_port_var_name = f'{db_service_name}_PORT'
+    db_username = 'smak'
+    db_password = 'smak'
     db_name = 'scm-database'
 
     def __init__(self):
         try:
             self.db_host = os.environ.get(self.db_host_var_name, 'localhost')
             self.db_port = os.environ.get(self.db_port_var_name, 27017)
-            print(f'Connecting to mongo db on : {self.db_host}:{self.db_port}')
-            
+            self.connection_string = f'mongodb://{self.db_username}:{self.db_password}@{self.db_host}:{self.db_port}'
+            print(f'Connecting to mongo db using : {self.connection_string}')
+            self.client = pymongo.MongoClient(self.connection_string)
+            self.db = self.client["scm-db"]
+            self.data_collection = self.db["data_collection"]
         except Exception as e:
             print (f"Failed to connect to mongo db : {e}")
     
+    def __del__(self):
+        try:
+            self.connection.close()
+        except Exception as e:
+            print (f"Failed to disconnect from event queue : {e}")
+
     def save(self, data):
-        print('TODO')
+        try:
+            jd = json.loads(data)
+            self.data_collection.insert_one(jd)
+        except Exception as e:
+            print (f"Failed to save to mongo db : {e}")
+    
+    def fetch(self):
+        try:
+            return list(self.data_collection.find())
+        except Exception as e:
+            print (f"Failed to read from mongo db : {e}")
+            return str(e)

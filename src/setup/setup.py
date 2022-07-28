@@ -16,21 +16,21 @@ namespace = 'default'
 
 def del_k8_deployment(deployment_name):
     try:
-        resp = apps_v1.delete_namespaced_deployment(name=deployment_name, namespace=namespace)
+        apps_v1.delete_namespaced_deployment(name=deployment_name, namespace=namespace)
         print(f'deployment "{deployment_name}" deleted')
     except Exception as e:
         print (f"Failed to delete k8 deployment : {str(e)}")
 
 def del_k8_pvc(pvc_name):
     try:
-        resp = core_V1.delete_namespaced_persistent_volume_claim(name=pvc_name, namespace=namespace)
+        core_V1.delete_namespaced_persistent_volume_claim(name=pvc_name, namespace=namespace)
         print(f'persistent volume claim "{pvc_name}" deleted')
     except Exception as e:
         print (f"Failed to delete k8 persistent volume claim : {str(e)}")
 
 def del_k8_pv(pv_name):
     try:
-        resp = core_V1.delete_persistent_volume(name=pv_name)
+        core_V1.delete_persistent_volume(name=pv_name)
         print(f'persistent volume "{pv_name}" deleted')
     except Exception as e:
         print (f"Failed to delete k8 persistent volume : {str(e)}")
@@ -75,7 +75,8 @@ if __name__ == '__main__':
         setup_component('scm-queue', docker_image_build=False)
         print('waiting for 5 secs for scm-queue pod to startup')
         time.sleep(5)
-        setup_component('scm-service', cleanup_k8_service=False)
+        setup_component('scm-intake-service', cleanup_k8_service=False)
+        setup_component('scm-analyze-service', cleanup_k8_service=False)
         setup_component('scm-api')
         print('\nwaiting for 10 secs for scm-api pod to startup')
         time.sleep(10)

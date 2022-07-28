@@ -26,6 +26,9 @@ class EventQueue:
         except Exception as e:
             print (f"Failed to disconnect from event queue : {e}")
 
+    def is_connected(self) -> bool:
+        return self.connection.is_open and self.channel.is_open
+
     def publish(self, event_data):
         try:
             print(f"attempting to post {event_data}")

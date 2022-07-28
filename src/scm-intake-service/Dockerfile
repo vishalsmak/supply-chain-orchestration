@@ -11,9 +11,9 @@ RUN apt-get -y install \
 
 WORKDIR /app
 
-COPY scm-service/requirements.txt /app/requirements.txt
+COPY scm-intake-service/requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt --src /usr/local/src
 
 COPY . .
 
-CMD [ "python", "scm-service/service.py" ]
+CMD [ "python", "-u", "scm-intake-service/service.py" ]

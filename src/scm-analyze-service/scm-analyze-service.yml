@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scm-analyze-service
+  labels:
+    app: scm-analyze-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scm-analyze-service
+  template:
+    metadata:
+      labels:
+        app: scm-analyze-service
+    spec:
+      containers:
+        - name: scm-analyze-service
+          image: scm-analyze-service
+          imagePullPolicy: Never
