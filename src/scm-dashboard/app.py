@@ -382,7 +382,7 @@ app.layout = html.Div(
                                     style={"font-weight": "bold"},
                                 ),
                                 html.H5(
-                                    "Analysis of the relationship between nutritional patterns and \n the health status within the countries",
+                                    "Data driven supply chain management tool",
                                     style={"margin-top": "0px"},
                                 ),
                             ]
