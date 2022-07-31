@@ -511,7 +511,19 @@ app.layout = html.Div(
                             className="row container-display",
                         ),
                         html.Div(
-                            [dcc.Graph(id="choropleth")],
+                            [dcc.Graph(id="choropleth"),
+                             dcc.Slider(
+                                 id="slider-minimum-confidence-threshold",
+                                 min=20,
+                                 max=80,
+                                 marks={
+                                     i: f"{i}%"
+                                     for i in range(20, 81, 10)
+                                 },
+                                 value=30,
+                                 updatemode="drag",
+                             )
+                             ],
                             # id="countGraphContainer",
                             className="pretty_container",
                         ),
@@ -715,30 +727,8 @@ app.layout = html.Div(
                     },
                 ),
                 html.P(
-                    "Maximilian Maukner (m20200645@novaims.unl.pt)  -  Ehsan Meisami Fard (m20201050@novaims.unl.pt)  -  Franz Michael Frank (m20200618@novaims.unl.pt)  -  Steffen Hillmann (m20200589@novaims.unl.pt)",
+                    "Vishal Makode",
                     style={"text-align": "center", "font-size": "10pt"},
-                ),
-            ],
-            className="row pretty_container",
-        ),
-        html.Div(
-            [
-                html.H6(
-                    "Sources",
-                    style={
-                        "margin-top": "0",
-                        "font-weight": "bold",
-                        "text-align": "center",
-                    },
-                ),
-                dcc.Markdown(
-                    """\
-                         - Eurostat: https://ec.europa.eu/eurostat/databrowser/view/HLTH_SHA11_HF__custom_227597/bookmark/table?lang=en&bookmarkId=1530a1e6-767e-4661-9e15-0ed2f7fae0d5
-                         - Food and Agriculture Organization of the United Nations: http://www.fao.org/faostat/en/#data/FBS
-                         - Opendatasoft: https://data.opendatasoft.com/explore/dataset/european-union-countries@public/export/
-                         - Our World in Data: https://covid.ourworldindata.org/data/owid-covid-data.csv?v=2021-03-11
-                        """,
-                    style={"font-size": "10pt"},
                 ),
             ],
             className="row pretty_container",
