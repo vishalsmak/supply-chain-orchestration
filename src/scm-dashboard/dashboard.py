@@ -351,8 +351,22 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.Img(
-                            src=app.get_asset_url("Nova_IMS.png"),
-                            id="plotly-image",
+                            src=app.get_asset_url("supply_logo.png"),
+                            id="supply-image",
+                            style={
+                                "height": "60px",
+                                "width": "auto",
+                                "margin-bottom": "25px",
+                            },
+                        )
+                    ],
+                    className="one column",
+                ),
+                html.Div(
+                    [
+                        html.Img(
+                            src=app.get_asset_url("qmul_logo.png"),
+                            id="qmul-image",
                             style={
                                 "height": "60px",
                                 "width": "auto",
@@ -371,7 +385,7 @@ app.layout = html.Div(
                                     style={"font-weight": "bold"},
                                 ),
                                 html.H5(
-                                    "Using Data Driven Decision Model",
+                                    "Using Data Driven Decision Models",
                                     style={"margin-top": "0px"},
                                 ),
                             ]
@@ -664,7 +678,7 @@ app.layout = html.Div(
                             className="pretty_container sixish columns",
                         ),
                         html.Div(
-                            [dcc.Graph(id="indicator-graphic"),],
+                            [dcc.Graph(id="indicator-graphic"), ],
                             className="pretty_container almost columns",
                         ),
                     ],
@@ -940,7 +954,7 @@ def display_cor_ma(var):
         Output("mean", "children"),
         Output("st_dev", "children"),
     ],
-    [Input("nutrition_types", "value"),],
+    [Input("nutrition_types", "value"), ],
 )
 def indicator(auswahl):
     max_id = df[auswahl].idxmax()
@@ -1054,6 +1068,3 @@ def update_graph(xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type):
 
 
 server = app.server
-
-if __name__ == "__main__":
-    app.run_server(debug=True)
