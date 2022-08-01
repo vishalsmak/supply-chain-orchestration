@@ -12,6 +12,7 @@ import plotly.graph_objs as go
 import statsmodels.api as sm
 import plotly.figure_factory as ff
 import numpy as np
+from data_feed import *
 
 mapbox_access_token = "pk.eyJ1Ijoic3RlZmZlbmhpbGwiLCJhIjoiY2ttc3p6ODlrMG1ybzJwcG10d3hoaDZndCJ9.YE2gGNJiw6deBuFgHRHPjg"
 path = "https://raw.githubusercontent.com/FranzMichaelFrank/health_eu/main/"
@@ -99,7 +100,6 @@ health_cols = [
 # Create controls
 behaviour_options = [dict(label=country, value=country) for country in columns]
 
-
 food_options_ = [
     "Alcoholic Beverages",
     "Animal fats",
@@ -122,7 +122,6 @@ food_options_ = [
 ]
 
 food_options = [dict(label=country, value=country) for country in food_options_]
-
 
 dropdown_behaviour = dcc.Dropdown(
     id="candidate_radio", options=behaviour_options, value=columns[0]
@@ -164,16 +163,9 @@ radio_food_behaviour = dcc.RadioItems(
     labelStyle={"display": "block", "text-align": "justify"},
 )
 
-
 corr_options = [
     dict(label=country, value=country)
-    for country in [
-        "Obesity",
-        "Diabetes Prevalence",
-        "Cardiovascular Death Rate",
-        "Life Expectancy",
-        "Health Expenditure",
-    ]
+    for country in correlation_drop_list
 ]
 cor_behav = dcc.Dropdown(
     id="cor_behave",
@@ -287,7 +279,6 @@ fig_cor.update_layout(
 fig_cor.update_layout(xaxis_tickangle=0)
 fig_cor.update_layout(title_text="", height=600)
 
-
 health = df_scatter[
     [
         "Country",
@@ -298,7 +289,6 @@ health = df_scatter[
         "Health Expenditure",
     ]
 ]
-
 
 fig_bar = go.Figure()
 fig_bar.add_trace(
@@ -347,7 +337,6 @@ fig_bar.update_layout(plot_bgcolor="white")
 fig_bar.update_yaxes(showline=True, linewidth=2, linecolor="black", gridcolor="grey")
 fig_bar.update_xaxes(showline=True, linewidth=2, linecolor="black")
 
-
 ## FF ##
 
 # Create app layout
@@ -378,11 +367,11 @@ app.layout = html.Div(
                         html.Div(
                             [
                                 html.H4(
-                                    "Supply chain management tool",
+                                    "SUPPLY CHAIN MANAGEMENT TOOL",
                                     style={"font-weight": "bold"},
                                 ),
                                 html.H5(
-                                    "Data driven supply chain management tool",
+                                    "Using Data Driven Decision Model",
                                     style={"margin-top": "0px"},
                                 ),
                             ]
@@ -511,21 +500,31 @@ app.layout = html.Div(
                             className="row container-display",
                         ),
                         html.Div(
-                            [dcc.Graph(id="choropleth"),
-                             dcc.Slider(
-                                 id="slider-minimum-confidence-threshold",
-                                 min=20,
-                                 max=80,
-                                 marks={
-                                     i: f"{i}%"
-                                     for i in range(20, 81, 10)
-                                 },
-                                 value=30,
-                                 updatemode="drag",
-                             )
-                             ],
+                            [dcc.Graph(id="choropleth")],
                             # id="countGraphContainer",
                             className="pretty_container",
+                        ),
+                        html.Div(
+                            [
+                                html.P(
+                                    "Chomu slider test",
+                                    style={"font-weight": "bold", "text-align": "center"},
+                                ),
+                                dcc.Slider(
+                                    className="chomu slider",
+                                    id="slider-minimum-confidence-threshold_1",
+                                    min=20,
+                                    max=80,
+                                    marks={
+                                        i: f"{i}%"
+                                        for i in range(20, 81, 10)
+                                    },
+                                    value=30,
+                                    updatemode="drag",
+                                )
+                            ],
+                            className="mini_container",
+                            id="gas_!",
                         ),
                     ],
                     id="right-column",
@@ -570,7 +569,7 @@ app.layout = html.Div(
                             },
                         ),
                         html.P(
-                            "In the heatmap below, the correlations between the 5 health variables and the 18 food variables can be explored.",
+                            "In the heatmap below, the correlations between the 5 supply chain variables and 18 logistical variables",
                             className="control_label",
                             style={"text-align": "justify"},
                         ),
@@ -751,6 +750,7 @@ colors = [
     "#f0f921",
 ]
 colors2 = ["#fdca26", "#ed7953", "#bd3786", "#7201a8", "#0d0887"]
+
 
 ####
 @app.callback(Output("choropleth", "figure"), [Input("nutrition_types", "value")])
@@ -979,11 +979,10 @@ def indicator(auswahl):
     Input("yaxis-type", "value"),
 )
 def update_graph(xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type):
-
     # col_name = str(yaxis_column_name) + " (above Average)"
     col_name = " "
     df_scatter[col_name] = (
-        df_scatter[yaxis_column_name] > df_scatter[yaxis_column_name].mean()
+            df_scatter[yaxis_column_name] > df_scatter[yaxis_column_name].mean()
     )
 
     def aa(inp):
