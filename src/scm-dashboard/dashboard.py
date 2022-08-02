@@ -11,7 +11,7 @@ import pandas as pd
 import plotly.graph_objs as go
 import statsmodels.api as sm
 import plotly.figure_factory as ff
-import numpy as np
+import json
 from data_feed import *
 
 mapbox_access_token = "pk.eyJ1Ijoic3RlZmZlbmhpbGwiLCJhIjoiY2ttc3p6ODlrMG1ybzJwcG10d3hoaDZndCJ9.YE2gGNJiw6deBuFgHRHPjg"
@@ -21,9 +21,9 @@ df_scatter = pd.read_csv(path + "scatter_data.csv", dtype={"id": str})
 clusters = pd.read_csv(path + "final_clusters.csv")
 box_cluster = pd.read_csv(path + "box_cluster.csv")
 
-url = path + "european-union-countries.geojson"
-response = urllib.urlopen(url)
-european_union = json.loads(response.read())
+
+with open('custom.json') as f:
+    european_union = json.loads(f.read())
 
 
 def cz(s):
