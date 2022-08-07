@@ -521,11 +521,11 @@ app.layout = html.Div(
                         html.Div(
                             [
                                 html.P(
-                                    "Chomu slider test",
+                                    "Input feature slider",
                                     style={"font-weight": "bold", "text-align": "center"},
                                 ),
                                 dcc.Slider(
-                                    className="chomu slider",
+                                    className="feature slider",
                                     id="slider-minimum-confidence-threshold_1",
                                     min=20,
                                     max=80,

@@ -2,7 +2,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-
 def importing_data():
     """
     Importing dataset from local directory
@@ -79,3 +78,32 @@ def plot_correlation_matrix(data):
     top = corrmap.index
     plt.figure(figsize=(30, 20))
     g = sns.heatmap(data[top].corr(), annot=True, cmap="RdYlGn")
+
+
+def extract_category(dataset):
+    dataset['Customer Full Name'] = dataset['Customer Fname'].astype(str) + dataset['Customer Lname'].astype(str)
+
+    # dropping unimportant columns
+    data = dataset.drop(
+        ['Customer Email', 'Product Status', 'Customer Password', 'Customer Street', 'Customer Fname', 'Customer Lname',
+         'Latitude', 'Longitude', 'Product Description', 'Product Image', 'Order Zipcode',
+         'shipping date (DateOrders)'], axis=1)
+
+    data['Customer Zipcode'] = data['Customer Zipcode'].fillna(0)
+
+    market = data.groupby('Market')  # Grouping by market
+    region = data.groupby('Order Region')
+    category = data.groupby('Category Name')
+    department = data.groupby('Department Name')
+    cat_market = dataset.groupby(['Category Name', 'Market'])
+
+    # get count of all Market "ordered" count wrt to category name
+    count = cat_market['Market'].count()
+    pass
+
+
+if __name__ == "__main__":
+
+    data = importing_data()
+    extract_category(data)
+    pass
