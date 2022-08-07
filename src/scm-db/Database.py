@@ -22,9 +22,9 @@ class Database:
     
     def __del__(self):
         try:
-            self.connection.close()
+            self.client.close()
         except Exception as e:
-            print (f"Failed to disconnect from event queue : {e}")
+            print (f"Failed to disconnect from mongo db : {e}")
 
     def save(self, data):
         try:

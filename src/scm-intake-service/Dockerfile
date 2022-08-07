@@ -9,11 +9,12 @@ RUN apt-get -y install \
     python3-dev \
     build-essential
 
+COPY scm-intake-service /app/scm-intake-service
+COPY scm-entities /app/scm-entities
+COPY scm-queue /app/scm-queue
+COPY scm-db /app/scm-db
+
 WORKDIR /app
-
-COPY scm-intake-service/requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt --src /usr/local/src
-
-COPY . .
+RUN pip install -r scm-intake-service/requirements.txt --src /usr/local/src
 
 CMD [ "python", "-u", "scm-intake-service/service.py" ]

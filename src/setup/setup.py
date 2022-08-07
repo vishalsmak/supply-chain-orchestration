@@ -64,7 +64,7 @@ def reset_pv():
     del_k8_deployment('scm-db')
     del_k8_pv('scm-storage')
     del_k8_pvc('scm-storage-claim')
-    time.sleep(5)
+    time.sleep(10)
     create_from_yml('scm-db', 'scm-pv.yml')
 
 if __name__ == '__main__':
@@ -77,11 +77,13 @@ if __name__ == '__main__':
         time.sleep(5)
         setup_component('scm-intake-service', cleanup_k8_service=False)
         setup_component('scm-analyze-service', cleanup_k8_service=False)
+        setup_component('scm-dash')
         setup_component('scm-api')
         print('\nwaiting for 10 secs for scm-api pod to startup')
         time.sleep(10)
         print('\n\n-----------------------------forwarding scm-api on localhost:8080')
         subprocess.Popen('kubectl port-forward service/scm-api 8080:5000').communicate()
+        #subprocess.Popen(' kubectl port-forward service/scm-dash 80:4000').communicate()
     except KeyboardInterrupt:
         print('!!!!!!script run terminated from keyboard!!!!!!')
         exit()
