@@ -1,9 +1,9 @@
-import os, time, subprocess, argparse
+import os, time, subprocess, argparse, psutil
 from kubernetes import client, config, utils
 import docker
 
 parser = argparse.ArgumentParser(description='args to setup SCM app')
-parser.add_argument('--fresh_db', dest='fresh_db', type=bool, help='start app with fresh DB', default=False)
+parser.add_argument('--fresh_db', dest='fresh_db', help='start app with fresh DB', default=False, action=argparse.BooleanOptionalAction)
 args = parser.parse_args()
 config.load_kube_config()
 k8s_client = client.ApiClient()
@@ -67,8 +67,18 @@ def reset_pv():
     time.sleep(10)
     create_from_yml('scm-db', 'scm-pv.yml')
 
+def port_forward(component, container_port, dest_port):
+     print(f'\n\n-----------------------------forwarding {component} on localhost:{dest_port}')
+     subprocess.Popen(f'kubectl port-forward service/{component} {dest_port}:{container_port}', stdout=subprocess.DEVNULL)
+
+def kill_kubectl():
+    for proc in psutil.process_iter():
+        if proc.name() == 'kubectl.exe':
+            proc.kill()
+
 if __name__ == '__main__':
     try:
+        kill_kubectl()
         if (args.fresh_db):
             reset_pv()
         setup_component('scm-db', cleanup_k8_dep=not args.fresh_db, docker_image_build=False)
@@ -79,11 +89,13 @@ if __name__ == '__main__':
         setup_component('scm-analyze-service', cleanup_k8_service=False)
         setup_component('scm-dash')
         setup_component('scm-api')
-        print('\nwaiting for 10 secs for scm-api pod to startup')
+        print('\nwaiting for 10 secs for pods to startup')
         time.sleep(10)
-        print('\n\n-----------------------------forwarding scm-api on localhost:8080')
-        subprocess.Popen('kubectl port-forward service/scm-api 8080:5000').communicate()
-        #subprocess.Popen(' kubectl port-forward service/scm-dash 80:4000').communicate()
+        port_forward('scm-api', 5000, 8080)
+        port_forward('scm-dash', 4000, 80)
+        port_forward('scm-db', 27017, 27017)
+        port_forward('scm-queue', 15672, 15672)
+        print(f'\n\n----------------------------------setup complete----------------------------------\n')
     except KeyboardInterrupt:
         print('!!!!!!script run terminated from keyboard!!!!!!')
         exit()
