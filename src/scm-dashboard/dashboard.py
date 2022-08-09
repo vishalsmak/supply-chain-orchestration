@@ -22,7 +22,7 @@ clusters = pd.read_csv(path + "final_clusters.csv")
 box_cluster = pd.read_csv(path + "box_cluster.csv")
 
 
-with open('custom.json') as f:
+with open('custom.json', encoding="utf8") as f:
     european_union = json.loads(f.read())
 
 
