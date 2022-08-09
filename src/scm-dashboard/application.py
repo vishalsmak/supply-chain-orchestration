@@ -94,12 +94,14 @@ def extract_category(dataset):
     market = data.groupby('Market')  # Grouping by market
     region = data.groupby('Order Region')
     category = data.groupby('Category Name')
-    department = data.groupby('Department Name')
+    country = dataset.groupby('Order Country')
+    country_list = country['Order Country']
     cat_market = dataset.groupby(['Category Name', 'Market'])
+    cat_country = dataset.groupby(['Category Name', 'Order Country']).count()
+    print(cat_country.head(100))
 
     # get count of all Market "ordered" count wrt to category name
     count = cat_market['Market'].count()
-    pass
 
 
 if __name__ == "__main__":
