@@ -10,7 +10,12 @@ class AppData:
         self.category_list = None
         self.country_list = None
         self.delivery_risk = None
+        self.data_headers = None
+        self.dropped_data = None
+
+        self.corrmap = None
         data = self.importing_data()
+        self.calculate_correlation(data)
         self.extract_category(data)
 
     def importing_data(self):
@@ -29,6 +34,14 @@ class AppData:
     def get_delivery_risk_mean(self):
         return self.delivery_risk
 
+    def get_correlation(self):
+        return self.corrmap
+
+    def get_headers(self):
+        return self.data_headers
+
+    def get_dropped_data(self):
+        return self.dropped_data
 
     def extract_shipment_features(self, data):
         """
@@ -142,3 +155,17 @@ class AppData:
         final_df = pd.DataFrame(data=output, index=self.country_list, columns=self.category_list)
         delivery_exp = dataset[['Order Country', 'Late_delivery_risk']].copy()
         self.delivery_risk = delivery_exp.groupby(['Order Country']).mean().reset_index()
+
+    def calculate_correlation(self, data):
+
+        data['Customer Full Name'] = data['Customer Fname'].astype(str) + data['Customer Lname'].astype(str)
+        data = data.drop(
+            ['Customer Email', 'Product Status', 'Customer Password', 'Customer Street', 'Customer Fname', 'Customer Lname',
+             'Latitude', 'Longitude', 'Product Description', 'Product Image', 'Order Zipcode',
+             'shipping date (DateOrders)', 'Order State'], axis=1)
+        data['Customer Zipcode'] = data['Customer Zipcode'].fillna(0)
+
+        self.dropped_data = data
+        self.data_headers = list(self.dropped_data)
+        self.corrmap = data.corr()
+

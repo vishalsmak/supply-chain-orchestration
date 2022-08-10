@@ -143,14 +143,17 @@ radio_food_behaviour = dcc.RadioItems(
     labelStyle={"display": "block", "text-align": "justify"},
 )
 
+dropped_data = app_data.get_dropped_data()
+correlated_data = dropped_data.corr()
+
 corr_options = [
-    dict(label=country, value=country)
-    for country in []
+    dict(label=header, value=header)
+    for header in list(correlated_data)
 ]
 cor_behav = dcc.Dropdown(
     id="cor_behave",
     options=corr_options,
-    value="Obesity"  # ,
+    value="Product Price"  # ,
     # labelStyle={'display': 'block', "text-align": "justify"}
 )
 
@@ -859,13 +862,14 @@ def display_cor_ma(var):
         "Health Expenditure",
     ]
 
-    df_corr_r = df_scatter[foods_health]
-    df_corr_round = df_corr_r.corr()[[var]].T[foods_r].T.round(2)
+    de = correlated_data[[var]].round(3)
+    # df_corr_r = df_scatter[foods_health]
+    # df_corr_round = df_corr_r.corr()[[var]].T[foods_r].T.round(2)
     # , "Diabetes Prevalence", "Cardiovascular Death Rate", "Life Expectancy", "Health Expenditure"
     fig_cor = ff.create_annotated_heatmap(
-        z=df_corr_round.to_numpy(),
-        x=df_corr_round.columns.tolist(),
-        y=df_corr_round.index.tolist(),
+        z=de.to_numpy(),
+        x=de.columns.tolist(),
+        y=de.index.tolist(),
         zmax=1,
         zmin=-1,
         showscale=True,
