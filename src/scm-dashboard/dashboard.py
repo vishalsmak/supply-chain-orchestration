@@ -5,7 +5,7 @@ from dash import html
 from dash.dependencies import Input, Output
 import plotly.express as px
 import urllib.request as urllib
-
+from application import AppData
 # from urllib.request import urlopen
 import pandas as pd
 import plotly.graph_objs as go
@@ -21,6 +21,7 @@ df_scatter = pd.read_csv(path + "scatter_data.csv", dtype={"id": str})
 clusters = pd.read_csv(path + "final_clusters.csv")
 box_cluster = pd.read_csv(path + "box_cluster.csv")
 
+app_data = AppData()
 
 with open('custom.json', encoding="utf8") as f:
     european_union = json.loads(f.read())
@@ -100,28 +101,7 @@ health_cols = [
 # Create controls
 behaviour_options = [dict(label=country, value=country) for country in columns]
 
-food_options_ = [
-    "Alcoholic Beverages",
-    "Animal fats",
-    "Cereals - Excluding Beer",
-    "Eggs",
-    "Fish, Seafood",
-    "Fruits - Excluding Wine",
-    "Meat",
-    "Milk - Excluding Butter",
-    "Offals",
-    "Oilcrops",
-    "Pulses",
-    "Spices",
-    "Starchy Roots",
-    "Stimulants",
-    "Sugar & Sweeteners",
-    "Treenuts",
-    "Vegetable Oils",
-    "Vegetables",
-]
-
-food_options = [dict(label=country, value=country) for country in food_options_]
+category_options = app_data.get_category_list()
 
 dropdown_behaviour = dcc.Dropdown(
     id="candidate_radio", options=behaviour_options, value=columns[0]
@@ -157,9 +137,9 @@ ots_ = [dict(label=country, value=country) for country in ots]
 ots_behaviour = dcc.Dropdown(id="box_dd", options=ots_, value="Alcoholic Beverages")
 
 radio_food_behaviour = dcc.RadioItems(
-    id="nutrition_types",
-    options=food_options,
-    value="Alcoholic Beverages",
+    id="category_types",
+    options=category_options,
+    value="Consumer Electronics",
     labelStyle={"display": "block", "text-align": "justify"},
 )
 
@@ -628,7 +608,7 @@ app.layout = html.Div(
                                 dcc.Dropdown(
                                     id="xaxis-column",
                                     options=[
-                                        {"label": i, "value": i} for i in food_options_
+                                        {"label": i, "value": i} for i in category_options
                                     ],
                                     value="Alcoholic Beverages",  # ,className="pretty_container four columns",
                                 ),
@@ -767,14 +747,14 @@ colors2 = ["#fdca26", "#ed7953", "#bd3786", "#7201a8", "#0d0887"]
 
 
 ####
-@app.callback(Output("choropleth", "figure"), [Input("nutrition_types", "value")])
-def display_choropleth(candi):
+@app.callback(Output("choropleth", "figure"), [Input("category_types", "value")])
+def display_choropleth(category):
     fig = px.choropleth_mapbox(
-        df,
+        pd.read_csv("/Users/vishal/Documents/code/supply-chain-orchestration/src/scm-dashboard/geo_csv.csv", dtype={"id": str}),
         geojson=european_union,
-        color=candi,
-        locations="iso_a3",
-        featureidkey="properties.gu_a3",
+        color=category,
+        locations="Country",
+        featureidkey="properties.name_es",
         hover_name="Country",
         opacity=0.7,  # hover_data = [],
         center={"lat": 56.5, "lon": 11},
@@ -945,17 +925,17 @@ def display_cor_ma(var):
 ## FF ##
 
 
-@app.callback(
-    [
-        Output("max_name", "children"),
-        Output("max_value", "children"),
-        Output("min_name", "children"),
-        Output("min_value", "children"),
-        Output("mean", "children"),
-        Output("st_dev", "children"),
-    ],
-    [Input("nutrition_types", "value"), ],
-)
+# @app.callback(
+#     [
+#         Output("max_name", "children"),
+#         Output("max_value", "children"),
+#         Output("min_name", "children"),
+#         Output("min_value", "children"),
+#         Output("mean", "children"),
+#         Output("st_dev", "children"),
+#     ],
+#     [Input("category_types", "value"), ],
+#)
 def indicator(auswahl):
     max_id = df[auswahl].idxmax()
     min_id = df[auswahl].idxmin()
