@@ -9,6 +9,7 @@ class AppData:
     def __init__(self):
         self.category_list = None
         self.country_list = None
+        self.delivery_risk = None
         data = self.importing_data()
         self.extract_category(data)
 
@@ -24,6 +25,9 @@ class AppData:
 
     def get_category_list(self) -> list:
         return self.category_list
+
+    def get_delivery_risk_mean(self):
+        return self.delivery_risk
 
 
     def extract_shipment_features(self, data):
@@ -137,4 +141,4 @@ class AppData:
 
         final_df = pd.DataFrame(data=output, index=self.country_list, columns=self.category_list)
         delivery_exp = dataset[['Order Country', 'Late_delivery_risk']].copy()
-        delivery_exp = delivery_exp.groupby(['Order Country']).mean()
+        self.delivery_risk = delivery_exp.groupby(['Order Country']).mean().reset_index()

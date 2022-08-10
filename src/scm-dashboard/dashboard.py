@@ -145,7 +145,7 @@ radio_food_behaviour = dcc.RadioItems(
 
 corr_options = [
     dict(label=country, value=country)
-    for country in correlation_drop_list
+    for country in []
 ]
 cor_behav = dcc.Dropdown(
     id="cor_behave",
@@ -259,58 +259,20 @@ fig_cor.update_layout(
 fig_cor.update_layout(xaxis_tickangle=0)
 fig_cor.update_layout(title_text="", height=600)
 
-health = df_scatter[
-    [
-        "Country",
-        "Obesity",
-        "Diabetes Prevalence",
-        "Cardiovascular Death Rate",
-        "Life Expectancy",
-        "Health Expenditure",
-    ]
-]
+delivery_risk = app_data.get_delivery_risk_mean()
 
 fig_bar = go.Figure()
+
 fig_bar.add_trace(
     go.Bar(
-        x=health["Country"], y=health["Obesity"], name="Obesity", marker_color="#0d0887"
-    )
-)
-fig_bar.add_trace(
-    go.Bar(
-        x=health["Country"],
-        y=health["Diabetes Prevalence"],
-        name="Diabetes Prevalence",
+        x=delivery_risk["Order Country"],
+        y=delivery_risk["Late_delivery_risk"],
+        name="Delivery Risk",
         marker_color="#7201a8",
     )
 )
 
-fig_bar.add_trace(
-    go.Bar(
-        x=health["Country"],
-        y=health["Cardiovascular Death Rate"],
-        name="Cardiovascular Death Rate",
-        marker_color="#bd3786",
-    )
-)
 
-fig_bar.add_trace(
-    go.Bar(
-        x=health["Country"],
-        y=health["Life Expectancy"],
-        name="Life Expectancy",
-        marker_color="#ed7953",
-    )
-)
-
-fig_bar.add_trace(
-    go.Bar(
-        x=health["Country"],
-        y=health["Health Expenditure"],
-        name="Health Expenditure",
-        marker_color="#fdca26",
-    )
-)
 # Here we modify the tickangle of the xaxis, resulting in rotated labels.
 fig_bar.update_layout(barmode="group", xaxis_tickangle=-45)
 fig_bar.update_layout(plot_bgcolor="white")
