@@ -333,6 +333,10 @@ app.layout = html.Div(
                                     "Using Data Driven Decision Models",
                                     style={"margin-top": "0px"},
                                 ),
+                                html.H5(
+                                    "Vishal Makode - IOT(Data) MSc Project 2021-22",
+                                    style={"margin-top": "0px"},
+                                ),
                             ]
                         )
                     ],
@@ -353,7 +357,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H6(
-                            "Consumption by food type",
+                            "Demand Prediction Scores ",
                             style={
                                 "margin-top": "0",
                                 "font-weight": "bold",
@@ -361,14 +365,14 @@ app.layout = html.Div(
                             },
                         ),
                         html.P(
-                            "The cultures and customs of the 27 EU countries differ widely. The same applies to their eating and drinking habits."
-                            " The map on the right explores the food supply in kilograms per capita per year.",
+                            "Analytics for an online retailer with demand forecasting and price optimization scores."
+                            " The map on the right explores the demand for below categories for each and every country on map.",
                             className="control_label",
                             style={"text-align": "justify"},
                         ),
                         html.P(),
                         html.P(
-                            "Select a food category",
+                            "SELECT A CATEGORY",
                             className="control_label",
                             style={"text-align": "center", "font-weight": "bold"},
                         ),
@@ -483,8 +487,30 @@ app.layout = html.Div(
                                 )
                             ],
                             className="mini_container",
-                            id="gas_!",
+                            id="slider_1!",
                         ),
+                        html.Div(
+                            [
+                                html.P(
+                                    "Input feature slider 2",
+                                    style={"font-weight": "bold", "text-align": "center"},
+                                ),
+                                dcc.Slider(
+                                    className="feature slider",
+                                    id="slider-minimum-confidence-threshold_2",
+                                    min=20,
+                                    max=80,
+                                    marks={
+                                        i: f"{i}%"
+                                        for i in range(20, 81, 10)
+                                    },
+                                    value=30,
+                                    updatemode="drag",
+                                )
+                            ],
+                            className="mini_container",
+                            id="slider_2!",
+                        )
                     ],
                     id="right-column",
                     className="eight columns",
@@ -528,7 +554,7 @@ app.layout = html.Div(
                             },
                         ),
                         html.P(
-                            "In the heatmap below, the correlations between the 5 supply chain variables and 18 logistical variables",
+                            "In the heatmap below, the correlations between multiple supply chain variables",
                             className="control_label",
                             style={"text-align": "justify"},
                         ),
@@ -548,7 +574,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H6(
-                            "Analysing the correlations between food consumption and health",
+                            "Analysing the correlations between food logistical variables and price",
                             style={
                                 "margin-top": "0",
                                 "font-weight": "bold",
@@ -563,7 +589,7 @@ app.layout = html.Div(
                         html.Div(
                             [
                                 html.P(
-                                    "Select a food category",
+                                    "SELECT A CATEGORY",
                                     className="control_label",
                                     style={
                                         "font-weight": "bold",
@@ -643,7 +669,7 @@ app.layout = html.Div(
                     },
                 ),
                 html.P(
-                    "Finally, k-means clustering is carried out. The criterion can be selected on the left side, whereby either the 18 food variables, the 5 health variables or all of them in combination may be chosen for the clustering. On the right side, the resulting clusters can then be compared with respect to a chosen variable.",
+                    "Finally, k-means clustering is carried out. The criterion can be selected on the left side, whereby either the logistical variables, the 5 price variables or all of them in combination may be chosen for the clustering. On the right side, the resulting clusters can then be compared with respect to a chosen variable.",
                     className="control_label",
                     style={"text-align": "justify"},
                 ),
@@ -677,7 +703,7 @@ app.layout = html.Div(
         html.Div(
             [
                 html.H6(
-                    "Authors",
+                    "Authors | Supervisor",
                     style={
                         "margin-top": "0",
                         "font-weight": "bold",
@@ -685,7 +711,7 @@ app.layout = html.Div(
                     },
                 ),
                 html.P(
-                    "Vishal Makode",
+                    "Vishal Makode | Dr. Flynn Castles",
                     style={"text-align": "center", "font-size": "10pt"},
                 ),
             ],
