@@ -9,11 +9,11 @@ RUN apt-get -y install \
     python3-dev \
     build-essential
 
+COPY scm-analyze-service /app/scm-analyze-service
+COPY scm-db /app/scm-db
+COPY scm-entities /app/scm-entities
+
 WORKDIR /app
-
-COPY scm-analyze-service/requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt --src /usr/local/src
-
-COPY . .
+RUN pip install -r scm-analyze-service/requirements.txt --src /usr/local/src
 
 CMD [ "python", "-u", "scm-analyze-service/service.py" ]

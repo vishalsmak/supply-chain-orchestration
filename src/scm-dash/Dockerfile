@@ -10,12 +10,12 @@ RUN apt-get -y install \
     python3-dev \
     build-essential
 
-COPY scm-api /app/scm-api
+COPY scm-dash /app/scm-dash
+COPY scm-db /app/scm-db
 COPY scm-entities /app/scm-entities
-COPY scm-queue /app/scm-queue
 
 WORKDIR /app
-RUN pip install -r scm-api/requirements.txt --src /usr/local/src
+RUN pip install -r scm-dash/requirements.txt --src /usr/local/src
 
-EXPOSE 5000
-CMD [ "python", "-u", "scm-api/Api.py" ]
+EXPOSE 4000
+CMD [ "python", "-u", "scm-dash/dashboard.py" ]

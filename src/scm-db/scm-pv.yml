@@ -3,9 +3,9 @@ kind: PersistentVolume
 metadata:
   name: scm-storage
 spec:
-  storageClassName: hostpath
+  storageClassName: manual
   hostPath:
-    path: /scm-storage/data
+    path: /scm-storage
   capacity:
     storage: 2Gi
   accessModes:
@@ -21,3 +21,4 @@ spec:
   resources:
     requests:
       storage: 2Gi
+  storageClassName: manual

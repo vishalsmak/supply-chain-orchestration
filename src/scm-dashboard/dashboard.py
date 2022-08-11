@@ -5,13 +5,14 @@ from dash import html
 from dash.dependencies import Input, Output
 import plotly.express as px
 import urllib.request as urllib
-
+from application import AppData
 # from urllib.request import urlopen
 import pandas as pd
 import plotly.graph_objs as go
 import statsmodels.api as sm
 import plotly.figure_factory as ff
-import numpy as np
+import json
+from data_feed import *
 
 mapbox_access_token = "pk.eyJ1Ijoic3RlZmZlbmhpbGwiLCJhIjoiY2ttc3p6ODlrMG1ybzJwcG10d3hoaDZndCJ9.YE2gGNJiw6deBuFgHRHPjg"
 path = "https://raw.githubusercontent.com/FranzMichaelFrank/health_eu/main/"
@@ -20,9 +21,10 @@ df_scatter = pd.read_csv(path + "scatter_data.csv", dtype={"id": str})
 clusters = pd.read_csv(path + "final_clusters.csv")
 box_cluster = pd.read_csv(path + "box_cluster.csv")
 
-url = path + "european-union-countries.geojson"
-response = urllib.urlopen(url)
-european_union = json.loads(response.read())
+app_data = AppData()
+
+with open('custom.json', encoding="utf8") as f:
+    european_union = json.loads(f.read())
 
 
 def cz(s):
@@ -99,30 +101,7 @@ health_cols = [
 # Create controls
 behaviour_options = [dict(label=country, value=country) for country in columns]
 
-
-food_options_ = [
-    "Alcoholic Beverages",
-    "Animal fats",
-    "Cereals - Excluding Beer",
-    "Eggs",
-    "Fish, Seafood",
-    "Fruits - Excluding Wine",
-    "Meat",
-    "Milk - Excluding Butter",
-    "Offals",
-    "Oilcrops",
-    "Pulses",
-    "Spices",
-    "Starchy Roots",
-    "Stimulants",
-    "Sugar & Sweeteners",
-    "Treenuts",
-    "Vegetable Oils",
-    "Vegetables",
-]
-
-food_options = [dict(label=country, value=country) for country in food_options_]
-
+category_options = app_data.get_category_list()
 
 dropdown_behaviour = dcc.Dropdown(
     id="candidate_radio", options=behaviour_options, value=columns[0]
@@ -158,27 +137,23 @@ ots_ = [dict(label=country, value=country) for country in ots]
 ots_behaviour = dcc.Dropdown(id="box_dd", options=ots_, value="Alcoholic Beverages")
 
 radio_food_behaviour = dcc.RadioItems(
-    id="nutrition_types",
-    options=food_options,
-    value="Alcoholic Beverages",
+    id="category_types",
+    options=category_options,
+    value="Consumer Electronics",
     labelStyle={"display": "block", "text-align": "justify"},
 )
 
+dropped_data = app_data.get_dropped_data()
+correlated_data = dropped_data.corr()
 
 corr_options = [
-    dict(label=country, value=country)
-    for country in [
-        "Obesity",
-        "Diabetes Prevalence",
-        "Cardiovascular Death Rate",
-        "Life Expectancy",
-        "Health Expenditure",
-    ]
+    dict(label=header, value=header)
+    for header in list(correlated_data)
 ]
 cor_behav = dcc.Dropdown(
     id="cor_behave",
     options=corr_options,
-    value="Obesity"  # ,
+    value="Product Price"  # ,
     # labelStyle={'display': 'block', "text-align": "justify"}
 )
 
@@ -287,66 +262,25 @@ fig_cor.update_layout(
 fig_cor.update_layout(xaxis_tickangle=0)
 fig_cor.update_layout(title_text="", height=600)
 
-
-health = df_scatter[
-    [
-        "Country",
-        "Obesity",
-        "Diabetes Prevalence",
-        "Cardiovascular Death Rate",
-        "Life Expectancy",
-        "Health Expenditure",
-    ]
-]
-
+delivery_risk = app_data.get_delivery_risk_mean()
 
 fig_bar = go.Figure()
+
 fig_bar.add_trace(
     go.Bar(
-        x=health["Country"], y=health["Obesity"], name="Obesity", marker_color="#0d0887"
-    )
-)
-fig_bar.add_trace(
-    go.Bar(
-        x=health["Country"],
-        y=health["Diabetes Prevalence"],
-        name="Diabetes Prevalence",
+        x=delivery_risk["Order Country"],
+        y=delivery_risk["Late_delivery_risk"],
+        name="Delivery Risk",
         marker_color="#7201a8",
     )
 )
 
-fig_bar.add_trace(
-    go.Bar(
-        x=health["Country"],
-        y=health["Cardiovascular Death Rate"],
-        name="Cardiovascular Death Rate",
-        marker_color="#bd3786",
-    )
-)
 
-fig_bar.add_trace(
-    go.Bar(
-        x=health["Country"],
-        y=health["Life Expectancy"],
-        name="Life Expectancy",
-        marker_color="#ed7953",
-    )
-)
-
-fig_bar.add_trace(
-    go.Bar(
-        x=health["Country"],
-        y=health["Health Expenditure"],
-        name="Health Expenditure",
-        marker_color="#fdca26",
-    )
-)
 # Here we modify the tickangle of the xaxis, resulting in rotated labels.
 fig_bar.update_layout(barmode="group", xaxis_tickangle=-45)
 fig_bar.update_layout(plot_bgcolor="white")
 fig_bar.update_yaxes(showline=True, linewidth=2, linecolor="black", gridcolor="grey")
 fig_bar.update_xaxes(showline=True, linewidth=2, linecolor="black")
-
 
 ## FF ##
 
@@ -362,8 +296,22 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.Img(
-                            src=app.get_asset_url("Nova_IMS.png"),
-                            id="plotly-image",
+                            src=app.get_asset_url("supply_logo.png"),
+                            id="supply-image",
+                            style={
+                                "height": "60px",
+                                "width": "auto",
+                                "margin-bottom": "25px",
+                            },
+                        )
+                    ],
+                    className="one column",
+                ),
+                html.Div(
+                    [
+                        html.Img(
+                            src=app.get_asset_url("qmul_logo.png"),
+                            id="qmul-image",
                             style={
                                 "height": "60px",
                                 "width": "auto",
@@ -378,11 +326,15 @@ app.layout = html.Div(
                         html.Div(
                             [
                                 html.H4(
-                                    "Supply chain management tool",
+                                    "SUPPLY CHAIN MANAGEMENT TOOL",
                                     style={"font-weight": "bold"},
                                 ),
                                 html.H5(
-                                    "Data driven supply chain management tool",
+                                    "Using Data Driven Decision Models",
+                                    style={"margin-top": "0px"},
+                                ),
+                                html.H5(
+                                    "Vishal Makode - IOT(Data) MSc Project 2021-22",
                                     style={"margin-top": "0px"},
                                 ),
                             ]
@@ -405,7 +357,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H6(
-                            "Consumption by food type",
+                            "Demand Prediction Scores ",
                             style={
                                 "margin-top": "0",
                                 "font-weight": "bold",
@@ -413,14 +365,14 @@ app.layout = html.Div(
                             },
                         ),
                         html.P(
-                            "The cultures and customs of the 27 EU countries differ widely. The same applies to their eating and drinking habits."
-                            " The map on the right explores the food supply in kilograms per capita per year.",
+                            "Analytics for an online retailer with demand forecasting and price optimization scores."
+                            " The map on the right explores the demand for below categories for each and every country on map.",
                             className="control_label",
                             style={"text-align": "justify"},
                         ),
                         html.P(),
                         html.P(
-                            "Select a food category",
+                            "SELECT A CATEGORY",
                             className="control_label",
                             style={"text-align": "center", "font-weight": "bold"},
                         ),
@@ -515,6 +467,50 @@ app.layout = html.Div(
                             # id="countGraphContainer",
                             className="pretty_container",
                         ),
+                        html.Div(
+                            [
+                                html.P(
+                                    "Input feature slider",
+                                    style={"font-weight": "bold", "text-align": "center"},
+                                ),
+                                dcc.Slider(
+                                    className="feature slider",
+                                    id="slider-minimum-confidence-threshold_1",
+                                    min=20,
+                                    max=80,
+                                    marks={
+                                        i: f"{i}%"
+                                        for i in range(20, 81, 10)
+                                    },
+                                    value=30,
+                                    updatemode="drag",
+                                )
+                            ],
+                            className="mini_container",
+                            id="slider_1!",
+                        ),
+                        html.Div(
+                            [
+                                html.P(
+                                    "Input feature slider 2",
+                                    style={"font-weight": "bold", "text-align": "center"},
+                                ),
+                                dcc.Slider(
+                                    className="feature slider",
+                                    id="slider-minimum-confidence-threshold_2",
+                                    min=20,
+                                    max=80,
+                                    marks={
+                                        i: f"{i}%"
+                                        for i in range(20, 81, 10)
+                                    },
+                                    value=30,
+                                    updatemode="drag",
+                                )
+                            ],
+                            className="mini_container",
+                            id="slider_2!",
+                        )
                     ],
                     id="right-column",
                     className="eight columns",
@@ -558,7 +554,7 @@ app.layout = html.Div(
                             },
                         ),
                         html.P(
-                            "In the heatmap below, the correlations between the 5 health variables and the 18 food variables can be explored.",
+                            "In the heatmap below, the correlations between multiple supply chain variables",
                             className="control_label",
                             style={"text-align": "justify"},
                         ),
@@ -578,7 +574,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H6(
-                            "Analysing the correlations between food consumption and health",
+                            "Analysing the correlations between food logistical variables and price",
                             style={
                                 "margin-top": "0",
                                 "font-weight": "bold",
@@ -593,7 +589,7 @@ app.layout = html.Div(
                         html.Div(
                             [
                                 html.P(
-                                    "Select a food category",
+                                    "SELECT A CATEGORY",
                                     className="control_label",
                                     style={
                                         "font-weight": "bold",
@@ -603,7 +599,7 @@ app.layout = html.Div(
                                 dcc.Dropdown(
                                     id="xaxis-column",
                                     options=[
-                                        {"label": i, "value": i} for i in food_options_
+                                        {"label": i, "value": i} for i in category_options
                                     ],
                                     value="Alcoholic Beverages",  # ,className="pretty_container four columns",
                                 ),
@@ -653,7 +649,7 @@ app.layout = html.Div(
                             className="pretty_container sixish columns",
                         ),
                         html.Div(
-                            [dcc.Graph(id="indicator-graphic"),],
+                            [dcc.Graph(id="indicator-graphic"), ],
                             className="pretty_container almost columns",
                         ),
                     ],
@@ -673,7 +669,7 @@ app.layout = html.Div(
                     },
                 ),
                 html.P(
-                    "Finally, k-means clustering is carried out. The criterion can be selected on the left side, whereby either the 18 food variables, the 5 health variables or all of them in combination may be chosen for the clustering. On the right side, the resulting clusters can then be compared with respect to a chosen variable.",
+                    "Finally, k-means clustering is carried out. The criterion can be selected on the left side, whereby either the logistical variables, the 5 price variables or all of them in combination may be chosen for the clustering. On the right side, the resulting clusters can then be compared with respect to a chosen variable.",
                     className="control_label",
                     style={"text-align": "justify"},
                 ),
@@ -707,7 +703,7 @@ app.layout = html.Div(
         html.Div(
             [
                 html.H6(
-                    "Authors",
+                    "Authors | Supervisor",
                     style={
                         "margin-top": "0",
                         "font-weight": "bold",
@@ -715,30 +711,8 @@ app.layout = html.Div(
                     },
                 ),
                 html.P(
-                    "Maximilian Maukner (m20200645@novaims.unl.pt)  -  Ehsan Meisami Fard (m20201050@novaims.unl.pt)  -  Franz Michael Frank (m20200618@novaims.unl.pt)  -  Steffen Hillmann (m20200589@novaims.unl.pt)",
+                    "Vishal Makode | Dr. Flynn Castles",
                     style={"text-align": "center", "font-size": "10pt"},
-                ),
-            ],
-            className="row pretty_container",
-        ),
-        html.Div(
-            [
-                html.H6(
-                    "Sources",
-                    style={
-                        "margin-top": "0",
-                        "font-weight": "bold",
-                        "text-align": "center",
-                    },
-                ),
-                dcc.Markdown(
-                    """\
-                         - Eurostat: https://ec.europa.eu/eurostat/databrowser/view/HLTH_SHA11_HF__custom_227597/bookmark/table?lang=en&bookmarkId=1530a1e6-767e-4661-9e15-0ed2f7fae0d5
-                         - Food and Agriculture Organization of the United Nations: http://www.fao.org/faostat/en/#data/FBS
-                         - Opendatasoft: https://data.opendatasoft.com/explore/dataset/european-union-countries@public/export/
-                         - Our World in Data: https://covid.ourworldindata.org/data/owid-covid-data.csv?v=2021-03-11
-                        """,
-                    style={"font-size": "10pt"},
                 ),
             ],
             className="row pretty_container",
@@ -762,15 +736,16 @@ colors = [
 ]
 colors2 = ["#fdca26", "#ed7953", "#bd3786", "#7201a8", "#0d0887"]
 
+
 ####
-@app.callback(Output("choropleth", "figure"), [Input("nutrition_types", "value")])
-def display_choropleth(candi):
+@app.callback(Output("choropleth", "figure"), [Input("category_types", "value")])
+def display_choropleth(category):
     fig = px.choropleth_mapbox(
-        df,
+        pd.read_csv("/Users/vishal/Documents/code/supply-chain-orchestration/src/scm-dashboard/geo_csv.csv", dtype={"id": str}),
         geojson=european_union,
-        color=candi,
-        locations="iso_a3",
-        featureidkey="properties.gu_a3",
+        color=category,
+        locations="Country",
+        featureidkey="properties.name_es",
         hover_name="Country",
         opacity=0.7,  # hover_data = [],
         center={"lat": 56.5, "lon": 11},
@@ -913,13 +888,14 @@ def display_cor_ma(var):
         "Health Expenditure",
     ]
 
-    df_corr_r = df_scatter[foods_health]
-    df_corr_round = df_corr_r.corr()[[var]].T[foods_r].T.round(2)
+    de = correlated_data[[var]].round(3)
+    # df_corr_r = df_scatter[foods_health]
+    # df_corr_round = df_corr_r.corr()[[var]].T[foods_r].T.round(2)
     # , "Diabetes Prevalence", "Cardiovascular Death Rate", "Life Expectancy", "Health Expenditure"
     fig_cor = ff.create_annotated_heatmap(
-        z=df_corr_round.to_numpy(),
-        x=df_corr_round.columns.tolist(),
-        y=df_corr_round.index.tolist(),
+        z=de.to_numpy(),
+        x=de.columns.tolist(),
+        y=de.index.tolist(),
         zmax=1,
         zmin=-1,
         showscale=True,
@@ -941,17 +917,17 @@ def display_cor_ma(var):
 ## FF ##
 
 
-@app.callback(
-    [
-        Output("max_name", "children"),
-        Output("max_value", "children"),
-        Output("min_name", "children"),
-        Output("min_value", "children"),
-        Output("mean", "children"),
-        Output("st_dev", "children"),
-    ],
-    [Input("nutrition_types", "value"),],
-)
+# @app.callback(
+#     [
+#         Output("max_name", "children"),
+#         Output("max_value", "children"),
+#         Output("min_name", "children"),
+#         Output("min_value", "children"),
+#         Output("mean", "children"),
+#         Output("st_dev", "children"),
+#     ],
+#     [Input("category_types", "value"), ],
+#)
 def indicator(auswahl):
     max_id = df[auswahl].idxmax()
     min_id = df[auswahl].idxmin()
@@ -989,11 +965,10 @@ def indicator(auswahl):
     Input("yaxis-type", "value"),
 )
 def update_graph(xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type):
-
     # col_name = str(yaxis_column_name) + " (above Average)"
     col_name = " "
     df_scatter[col_name] = (
-        df_scatter[yaxis_column_name] > df_scatter[yaxis_column_name].mean()
+            df_scatter[yaxis_column_name] > df_scatter[yaxis_column_name].mean()
     )
 
     def aa(inp):
@@ -1065,6 +1040,3 @@ def update_graph(xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type):
 
 
 server = app.server
-
-if __name__ == "__main__":
-    app.run_server(debug=True)

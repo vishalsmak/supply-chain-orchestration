@@ -30,4 +30,4 @@ api.add_resource(Intake, '/intake')
 
 if __name__ == '__main__':
     print('Starting SCM API')
-    app.run(debug = True)
+    app.run(debug = True, port=5000)
