@@ -95,6 +95,7 @@ if __name__ == '__main__':
         port_forward('scm-dash', 4000, 80)
         port_forward('scm-db', 27017, 27017)
         port_forward('scm-queue', 15672, 15672)
+        port_forward('scm-queue', 5672, 5672)
         print(f'\n\n----------------------------------setup complete----------------------------------\n')
     except KeyboardInterrupt:
         print('!!!!!!script run terminated from keyboard!!!!!!')

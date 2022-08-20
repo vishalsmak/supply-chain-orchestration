@@ -18,4 +18,4 @@ WORKDIR /app
 RUN pip install -r scm-api/requirements.txt --src /usr/local/src
 
 EXPOSE 5000
-CMD [ "python", "-u", "scm-api/Api.py" ]
+CMD [ "python", "-u", "scm-api/Api.py", "-port_number=5000" ]
