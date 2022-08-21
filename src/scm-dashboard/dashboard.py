@@ -574,7 +574,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H6(
-                            "Analysing the correlations between food logistical variables and price",
+                            "Analysing the correlations between logistical variables and price",
                             style={
                                 "margin-top": "0",
                                 "font-weight": "bold",
