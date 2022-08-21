@@ -11,7 +11,8 @@ RUN apt-get -y install \
 
 COPY scm-analyze-service /app/scm-analyze-service
 COPY scm-db /app/scm-db
-COPY scm-entities /app/scm-entities
+COPY scm-queue /app/scm-queue
+COPY scm-common /app/scm-common
 
 WORKDIR /app
 RUN pip install -r scm-analyze-service/requirements.txt --src /usr/local/src

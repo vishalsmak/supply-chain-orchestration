@@ -110,29 +110,6 @@ class AppData:
         g = sns.heatmap(data[top].corr(), annot=True, cmap="RdYlGn")
 
     def extract_category(self, dataset):
-        # dataset['Customer Full Name'] = dataset['Customer Fname'].astype(str) + dataset['Customer Lname'].astype(str)
-        #
-        # # dropping unimportant columns
-        # data = dataset.drop(
-        #     ['Customer Email', 'Product Status', 'Customer Password', 'Customer Street', 'Customer Fname', 'Customer Lname',
-        #      'Latitude', 'Longitude', 'Product Description', 'Product Image', 'Order Zipcode',
-        #      'shipping date (DateOrders)'], axis=1)
-        #
-        # data['Customer Zipcode'] = data['Customer Zipcode'].fillna(0)
-        #
-        # market = data.groupby('Market')  # Grouping by market
-        # region = data.groupby('Order Region')
-        # category = data.groupby('Category Name')
-        # country = dataset.groupby('Order Country')
-        # country_list = country['Order Country']
-        # cat_market = dataset.groupby(['Category Name', 'Market'])
-        # cat_country = dataset.groupby(['Category Name', 'Order Country'])
-        #
-        # # get count of all Market "ordered" count wrt to category name
-        # count = cat_market['Market'].count()
-
-
-        ################ DATA for graphs #####################
         geo_df = dataset[['Category Name', 'Order Country', 'Order Item Quantity']].copy()
         geo_df_grouped = geo_df.groupby(['Category Name', 'Order Country']).sum()
         geo_df_ind = geo_df_grouped.reset_index()
@@ -144,7 +121,6 @@ class AppData:
         output = np.zeros((len(country_to_index), len(category_to_index)))
 
         for index, row in geo_df_ind.iterrows():
-            # print(row['Order Country'], row['Category Name'], row['Order Item Quantity'])
             cou = row['Order Country']
             cat = row['Category Name']
             qty = row['Order Item Quantity']

@@ -20,6 +20,13 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 5000
+          volumeMounts:
+            - name: scm-persistent-storage
+              mountPath: /app/uploads
+      volumes:
+        - name: scm-persistent-storage
+          persistentVolumeClaim: 
+            claimName: scm-storage-claim
 ---
 apiVersion: v1
 kind: Service

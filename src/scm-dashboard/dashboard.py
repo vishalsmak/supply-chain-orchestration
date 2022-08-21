@@ -4,9 +4,7 @@ from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
 import plotly.express as px
-import urllib.request as urllib
 from application import AppData
-# from urllib.request import urlopen
 import pandas as pd
 import plotly.graph_objs as go
 import statsmodels.api as sm
@@ -1027,15 +1025,7 @@ def update_graph(xaxis_column_name, yaxis_column_name, xaxis_type, yaxis_type):
     fig.update_layout(
         legend=dict(orientation="h", xanchor="center", x=0.5, yanchor="top", y=-0.2)
     )
-
     fig.update_layout(margin={"l": 40, "b": 40, "t": 10, "r": 0}, hovermode="closest")
-
-    # fig.update_xaxes(title=xaxis_column_name,
-    #                type='linear' if xaxis_type == 'Linear' else 'log')
-
-    # fig.update_yaxes(title=yaxis_column_name,
-    #                type='linear' if yaxis_type == 'Linear' else 'log')
-
     return fig
 
 

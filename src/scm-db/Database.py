@@ -1,4 +1,4 @@
-import os, pymongo, json
+import os, pymongo
 
 class Database:
     db_service_name = 'SCM_DB_SERVICE'
@@ -16,7 +16,9 @@ class Database:
             print(f'Connecting to mongo db using : {self.connection_string}')
             self.client = pymongo.MongoClient(self.connection_string)
             self.db = self.client["scm-db"]
-            self.data_collection = self.db["data_collection"]
+            self.category_collection = self.db["category_collection"]
+            self.dropped_collection = self.db["dropped_collection"]
+            self.delivery_rist_collection = self.db["risk_collection"]
         except Exception as e:
             print (f"Failed to connect to mongo db : {e}")
     
@@ -26,16 +28,27 @@ class Database:
         except Exception as e:
             print (f"Failed to disconnect from mongo db : {e}")
 
-    def save(self, data):
+    def save_category_list(self, data):
         try:
-            jd = json.loads(data)
-            self.data_collection.insert_one(jd)
+            self.category_collection.insert_many(data)
         except Exception as e:
             print (f"Failed to save to mongo db : {e}")
     
+    def save_dropped_data(self, data):
+        try:
+            self.dropped_collection.insert_many(data)
+        except Exception as e:
+            print (f"Failed to save to mongo db : {e}")
+
+    def save_delivery_risk_mean(self, data):
+        try:
+            self.delivery_rist_collection.inset_many(data)
+        except Exception as e:
+            print (f"Failed to save to mongo db : {e}")
+
     def fetch(self):
         try:
-            return list(self.data_collection.find())
+            return list(self.category_collection.find())
         except Exception as e:
             print (f"Failed to read from mongo db : {e}")
             return str(e)

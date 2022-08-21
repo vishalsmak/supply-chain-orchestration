@@ -7,9 +7,9 @@ spec:
   hostPath:
     path: /scm-storage
   capacity:
-    storage: 2Gi
+    storage: 6Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -17,7 +17,7 @@ metadata:
   name: scm-storage-claim
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 2Gi

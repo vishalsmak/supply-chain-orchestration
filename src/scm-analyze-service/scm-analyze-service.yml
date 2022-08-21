@@ -18,3 +18,10 @@ spec:
         - name: scm-analyze-service
           image: scm-analyze-service
           imagePullPolicy: Never
+          volumeMounts:
+            - name: scm-persistent-storage
+              mountPath: /app/uploads
+      volumes:
+        - name: scm-persistent-storage
+          persistentVolumeClaim: 
+            claimName: scm-storage-claim

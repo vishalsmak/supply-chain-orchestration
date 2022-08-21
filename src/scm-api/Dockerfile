@@ -11,7 +11,7 @@ RUN apt-get -y install \
     build-essential
 
 COPY scm-api /app/scm-api
-COPY scm-entities /app/scm-entities
+COPY scm-common /app/scm-common
 COPY scm-queue /app/scm-queue
 
 WORKDIR /app

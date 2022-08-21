@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scm-dash
+  name: scm-dashboard
   labels:
-    app: scm-dash
+    app: scm-dashboard
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: scm-dash
+      app: scm-dashboard
   template:
     metadata:
       labels:
-        app: scm-dash
+        app: scm-dashboard
     spec:
       containers:
-        - name: scm-dash
-          image: scm-dash
+        - name: scm-dashboard
+          image: scm-dashboard
           imagePullPolicy: Never
           ports:
             - containerPort: 4000
@@ -24,12 +24,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: scm-dash
+  name: scm-dashboard
   labels:
-    service: scm-dash
+    service: scm-dashboard
 spec:
   selector:
-    app: scm-dash
+    app: scm-dashboard
   ports:
   - port: 4000
     targetPort: 4000
