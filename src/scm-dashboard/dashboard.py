@@ -521,7 +521,7 @@ app.layout = html.Div(
         html.Div(
             [
                 html.H6(
-                    "General health information about the countries",
+                    "General information about the supply chain params",
                     style={
                         "margin-top": "0",
                         "font-weight": "bold",
@@ -529,7 +529,7 @@ app.layout = html.Div(
                     },
                 ),
                 html.P(
-                    "Similarly to nutrition, the health status also varies from country to country. The bar chart below shows the differences between the countries in terms of the following variables: prevalence of obesity in the adult population in % (Obesity), prevalence of diabetes in the adult population in % (Diabetes Prevalence), cardiovascular death rate per 100,000 population (Cardiovascular Death Rate), average life expectancy in years (Life Expectancy) and the expenditure of the government on the country's health system in % of the respective GDP (Health Expenditure).",
+                    "October and November are the months with most sales in the total year. Most people preferred to do payment through debit card and all the fraud transactions are happening with wire transfer so the company should be careful when customers are using wire transfer as the company was scammed with more than 100k by a single customer. All the orders with the risk of late delivery are delivered late every time. Most of the orders with Cleats, Men's Footwear, and Women's Apparel category products are causing late delivery also these products are suspected to fraud the most",
                     className="control_label",
                     style={"text-align": "justify"},
                 ),
@@ -560,7 +560,7 @@ app.layout = html.Div(
                         ),
                         # html.P("""<br>"""),
                         html.P(
-                            "Select a health variable",
+                            "Select a Supply Chain variable",
                             style={"font-weight": "bold", "text-align": "center"},
                         ),
                         cor_behav,
@@ -574,7 +574,7 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.H6(
-                            "Analysing the correlations between food logistical variables and price",
+                            "Analysing the correlations between logistical variables and price",
                             style={
                                 "margin-top": "0",
                                 "font-weight": "bold",
@@ -621,7 +621,7 @@ app.layout = html.Div(
                         html.Div(
                             [
                                 html.P(
-                                    "Select a health variable",
+                                    "Select a Supply Chain variable",
                                     className="control_label",
                                     style={
                                         "font-weight": "bold",
