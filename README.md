@@ -23,14 +23,14 @@ Supply-chain-orchestration App is tailored for supply chain managers. To aid the
 Few snapshots of individual pages with their descriptions.
 
 ### Landing Page
-![](images/Screenshot 2022-08-21 at 16.43.26.png)
+![](images/sc7.png)
 
 ### Data Exploration Page 
-![](images/Screenshot 2022-08-21 at 16.43.59.png)
+![](images/sc8.png)
 An overview of open correlation matrix heat map.
 
 ### Plotter Page 
-![](images/Screenshot 2022-08-20 at 15.51.14.png)
+![](images/sc4.png)
 An overview of open correlation matrix heat map.
 
 
