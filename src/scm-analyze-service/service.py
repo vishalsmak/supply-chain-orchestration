@@ -19,17 +19,16 @@ upload_folder = None
 database = None
 
 def on_message(ch, method, properties, body):
-    csv_filename = body
-    process_file(os.path.join(upload_folder, csv_filename))
+    try:
+        process_file(os.path.join(upload_folder, body.decode('utf-8')))
+    except Exception as e:
+        print (f"Failure while handling event : {str(e)}")
 
 def process_file(filename):
-    try:
-        de = DataExtractor(os.path.join(upload_folder, filename))
-        database.save_category_list(de.get_category_list())
-        database.save_dropped_data(de.get_dropped_data().to_dict('records'))
-        database.save_delivery_risk_mean(de.get_delivery_risk_mean().to_dict('records'))
-    except Exception as e:
-        print (f"Failure while handling event : {e}")
+    de = DataExtractor(os.path.join(upload_folder, filename))
+    database.save_category_list(de.get_category_list())
+    database.save_dropped_data(de.get_dropped_data().to_dict('records'))
+    database.save_delivery_risk_mean(de.get_delivery_risk_mean().to_dict('records'))
 
 if __name__ == '__main__':
     try:

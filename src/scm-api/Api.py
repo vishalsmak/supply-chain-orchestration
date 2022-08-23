@@ -49,12 +49,13 @@ class FileIntake(Resource):
     def post(self):
         args = file_upload.parse_args()
         file = args[upload_file_name]
-        save_name = secure_filename(file.filename)
-        file.save(os.path.join(upload_folder, save_name))
-        event_queue.publish(save_name)
-        resp = jsonify({'message' : 'File successfully uploaded'})
-        resp.status_code = 201
-        return resp
+        if (file.filename.lower().endswith('.csv')):
+            save_name = secure_filename(file.filename)
+            file.save(os.path.join(upload_folder, save_name))
+            event_queue.publish(save_name)
+            return make_response(jsonify({'message' : 'File successfully uploaded'}), 201)
+        else:
+            return make_response(jsonify({'message' : 'Only csv files allowed'}), 400)
 
 if __name__ == '__main__':
     event_queue = EventQueue()

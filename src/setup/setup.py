@@ -91,7 +91,7 @@ if __name__ == '__main__':
         print('\nwaiting for 10 secs for pods to startup')
         time.sleep(10)
         port_forward('scm-api', 5000, 8080)
-        port_forward('scm-dash', 4000, 80)
+        port_forward('scm-dashboard', 4000, 80)
         port_forward('scm-db', 27017, 27017)
         port_forward('scm-queue', 15672, 15672)
         port_forward('scm-queue', 5672, 5672)

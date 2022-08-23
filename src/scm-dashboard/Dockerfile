@@ -18,4 +18,4 @@ WORKDIR /app
 RUN pip install -r scm-dashboard/requirements.txt --src /usr/local/src
 
 EXPOSE 4000
-CMD [ "python", "-u", "scm-dashboard/run.py" ]
+CMD [ "python", "-u", "scm-dashboard/run.py", "-port_number=4000" ]

@@ -1,5 +1,4 @@
-# SCM Database Storage
 storage/
+setup/
 scm-dataset/
-scm-dashboard/
 scm-notebook/
