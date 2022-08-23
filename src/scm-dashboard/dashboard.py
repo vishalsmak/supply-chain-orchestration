@@ -399,6 +399,7 @@ app.layout = html.Div(
                                             style={"text-align": "center"},
                                         ),
                                         html.P(
+                                            "223.4 order/sec",
                                             id="max_value",
                                             style={"text-align": "center"},
                                         ),
@@ -417,6 +418,7 @@ app.layout = html.Div(
                                             },
                                         ),
                                         html.P(
+                                            "0.2 order/sec",
                                             id="min_name",
                                             style={"text-align": "center"},
                                         ),
@@ -439,6 +441,7 @@ app.layout = html.Div(
                                             },
                                         ),
                                         html.P(
+                                            "19.183 order/sec",
                                             id="mean", style={"text-align": "center"}
                                         ),
                                         html.P(
@@ -449,6 +452,7 @@ app.layout = html.Div(
                                             },
                                         ),
                                         html.P(
+                                            "1.977 order/sec",
                                             id="st_dev", style={"text-align": "center"}
                                         ),
                                     ],

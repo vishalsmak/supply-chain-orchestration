@@ -22,9 +22,9 @@ if __name__ == '__main__':
             # cleanup and fresh create the database folder
             shutil.rmtree(data_dir, ignore_errors=True)
             os.makedirs(data_dir)
-            run_cmd(f'minikube start --mount-string "{data_dir}:/scm-storage" --mount')
+            run_cmd(f'minikube start --mount-string "{data_dir}:/scm-storage" --mount --driver=docker')
         else:
-            run_cmd(f'minikube start')
+            run_cmd(f'minikube start --driver=docker')
         # navigate to setup directory
         os.chdir(os.path.join(src_dir, 'setup'))
         # set the environment variables for docker env in shell and setup SCM application 
